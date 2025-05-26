@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para Pau ❤</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-height: -webkit-fill-available; /* Para Safari iOS */
+            background: #1a1a2e;
+            overflow: hidden;
+            touch-action: manipulation;
+            font-family: 'Arial', sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Elimina el resaltado azul en iOS */
+        }
+        
+        #estrellas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        #contenedor {
+            position: relative;
+            width: 90vw;
+            height: 90vw;
+            max-width: 500px;
+            max-height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+        }
+        
+        #nombre {
+            position: absolute;
+            color: #ff5ea7;
+            font-family: 'Dancing Script', cursive;
+            font-size: 10vw;
+            z-index: 20;
+            text-shadow: 0 0 20px rgba(255, 94, 167, 0.9);
+            text-align: center;
+            user-select: none;
+            -webkit-user-select: none; /* Evita selección de texto en iOS */
+        }
+        
+        .corazon-parte {
+            position: absolute;
+            background: #ff5ea7;
+            border-radius: 50%;
+            opacity: 0;
+            transform: translate(-50%, -50%);
+            animation: aparecer 0.8s forwards, latido 2s 3.5s infinite;
+            box-shadow: 0 0 15px rgba(255, 94, 167, 0.8);
+            transition: all 0.4s;
+            will-change: transform, opacity; /* Mejora rendimiento de animaciones */
+        }
+        
+        @keyframes aparecer {
+            to { opacity: 0.9; }
+        }
+        
+        @keyframes latido {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+        }
+        
+        #btn-mensaje {
+            position: fixed;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 25px;
+            background: rgba(255, 94, 167, 0.4);
+            border: 2px solid #ff5ea7;
+            color: white;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 30;
+            transition: all 0.3s;
+            opacity: 0;
+            animation: aparecer 1s 4s forwards;
+            -webkit-appearance: none; /* Elimina estilos nativos de iOS */
+            outline: none;
+        }
+        
+        #btn-mensaje:hover, #btn-mensaje:active {
+            background: rgba(255, 94, 167, 0.8);
+            box-shadow: 0 0 30px #ff5ea7;
+        }
+        
+        .estrella {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: brillar 3s infinite ease-in-out;
+        }
+        
+        @keyframes brillar {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        #firma {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            color: rgba(255, 255, 255, 0.6);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-style: italic;
+            z-index: 10;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        @media (min-width: 768px) {
+            #nombre {
+                font-size: 80px;
+            }
+            #contenedor {
+                width: 500px;
+                height: 500px;
+            }
+        }
+
+        /* Corrección para Safari iOS */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                height: -webkit-fill-available;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="estrellas"></div>
+    <div id="contenedor">
+        <div id="nombre">Ojitos Lindos</div>
+    </div>
+    <button id="btn-mensaje">toque aca chismosita</button>
+    <div id="firma">Hecho por Santiago - Para la más linda, son varios mensajes, mira bien</div>
+
+    <script>
+        // === ESTRELLAS DE FONDO ===
+        const estrellasContainer = document.getElementById('estrellas');
+        for (let i = 0; i < 150; i++) {
+            const estrella = document.createElement('div');
+            estrella.className = 'estrella';
+            const tamaño = Math.random() * 3 + 1;
+            estrella.style.cssText = `
+                width: ${tamaño}px;
+                height: ${tamaño}px;
+                left: ${Math.random() * 100}vw;
+                top: ${Math.random() * 100}vh;
+                animation-delay: ${Math.random() * 3}s;
+            `;
+            estrellasContainer.appendChild(estrella);
+        }
+
+        // === CORAZÓN RESPONSIVE ===
+        function crearCorazon() {
+            const contenedor = document.getElementById('contenedor');
+            const rect = contenedor.getBoundingClientRect();
+            const centroX = rect.width / 2;
+            const centroY = rect.height / 2;
+            const puntos = 150;
+            
+            // Limpiar solo las partes del corazón, no el nombre
+            const partesCorazon = document.querySelectorAll('.corazon-parte');
+            partesCorazon.forEach(parte => parte.remove());
+            
+            for (let i = 0; i < puntos; i++) {
+                setTimeout(() => {
+                    const angulo = (i / puntos) * Math.PI * 2;
+                    const t = angulo;
+                    const x = 35 * Math.pow(Math.sin(t), 3);
+                    const y = -(30 * Math.cos(t) - 8 * Math.cos(2*t) - 3 * Math.cos(3*t) - 2 * Math.cos(4*t));
+                    
+                    const posX = centroX + x * (rect.width / 80);
+                    const posY = centroY + y * (rect.height / 80);
+                    
+                    const parte = document.createElement('div');
+                    parte.className = 'corazon-parte';
+                    const tamaño = 4 + Math.random() * 6;
+                    parte.style.width = `${tamaño}px`;
+                    parte.style.height = `${tamaño}px`;
+                    parte.style.left = `${posX}px`;
+                    parte.style.top = `${posY}px`;
+                    parte.style.animationDelay = `${i * 0.01}s`;
+                    
+                    const variacion = Math.random() * 50;
+                    parte.style.background = `rgb(255, ${94 + variacion}, ${167 + variacion})`;
+                    parte.style.boxShadow = `0 0 ${10 + Math.random() * 10}px rgba(255, ${94 + variacion}, ${167 + variacion}, 0.7)`;
+                    
+                    contenedor.appendChild(parte);
+                }, i * 20);
+            }
+        }
+
+        // === MENSAJITOS ===
+        document.getElementById('btn-mensaje').addEventListener('click', function() {
+            const mensajes = [
+                "Pau, ¿aceptas ser el bug que nunca quiero resolver? 🐛❤️",
+                "porque los ojitos tuyos merecen esto y mas",
+                "Si fueras una función, serías 'perfecta()' 💻",
+                "Oye... ¿por qué mi CPU se acelera cuando sonríes? ⚡",
+                "Esto es un 'Hola' disfrazado de corazón 😏",
+                "¿Sabías que tu nombre compila perfecto en mi mente? �",
+                "Deje ese skin curioso",
+                "Si esto fuera GitHub, te daría una estrella ⭐"
+            ];
+            alert(mensajes[Math.floor(Math.random() * mensajes.length)]);
+        });
+
+        // Iniciar y redimensionar
+        window.addEventListener('load', crearCorazon);
+        window.addEventListener('resize', function() {
+            // Usar debounce para mejorar rendimiento en iOS
+            clearTimeout(this.resizeTimer);
+            this.resizeTimer = setTimeout(() => {
+                crearCorazon();
+            }, 200);
+        });
+
+        // Corrección para iOS - asegurar altura correcta
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                let vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            }, 0);
+        });
+    </script>
+</body>
+</html>
